@@ -45,7 +45,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
   catch (error) {
     console.error(error);
     if (interaction.replied || interaction.deferred) {
-      await interaction.followUp({content: 'There was an error while executing this command!', ephemeral: true});
+      await interaction.followUp({content: 'Oh dear, something tripped me up and I cannot build a report. Please contact Mr. <@148331191555063808> if you feel this is a mistake.', ephemeral: true});
     }
     else {
       await interaction.reply({content: 'There was an error while executing this command!', ephemeral: true});
@@ -60,7 +60,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 client.once(Events.ClientReady, (c) => {
   console.log(`Ready! Logged in as ${c.user.tag}`);
   guild = client.guilds.cache.first();
-  client.user.setActivity('over camp 🏕️', {type: ActivityType.Watching} );
+  client.user.setActivity('over camps 🏕️', {type: ActivityType.Watching} );
   // guild.channels.cache.find(chan => chan.id === '1099469368506724413')
   // .send("What's up fuckers... I live!");
 });
