@@ -71,7 +71,7 @@ module.exports = {
   async execute(interaction) {
     // Reply to the command so avoid timeout and notify user the bot is working on the command
     await interaction.deferReply({ephemeral: IS_EPHEMERAL});
-    console.log(`\nCall from ${interaction.user.username} at: ${new Date().toTimeString()}`);
+    console.log(`\n${interaction.user.username} is calling at: ${new Date().toTimeString()}`);
 
     // Get the corresponding camp's MessageManager
     const campIndex = parseInt(interaction.options.getString(CAMP_OPTION));
@@ -85,8 +85,7 @@ module.exports = {
       if (!messageManager) {throw new Error(`Couldn't get Message Manager`);};
     }
     catch (error) {
-      await interaction.editReply(`I apologize, but I cannot run this report; ` +
-      `perhaps I do not have access to the requested camp's logs. ` +
+      await interaction.editReply(`I apologize, but I cannot run this report. ` +
       `Please contact Mr. <@148331191555063808> if you feel this is a mistake.`);
       console.log(error);
       return;
@@ -99,8 +98,8 @@ module.exports = {
     currentCutoffDate.setMinutes(0);
     currentCutoffDate.setSeconds(0);
 
-
-    switch (today.getDate()) {
+    // TODO: Use getDay() befofre June you boonhickie.
+    switch (today.getDay()) {
       case 0: // Sunday
         currentCutoffDate.setDate(today.getDate() - 2);
         break;
@@ -125,6 +124,9 @@ module.exports = {
       default:
         console.log('Somehow today is not Monday - Sunday in date check logic...');
     }
+
+    // console.log(currentCutoffDate.setDate((today.getDay()+ 2) % 7));
+
     // Set the past cutoff to be 7 days before current cutoff
     const pastCutoffDate = new Date(currentCutoffDate);
     pastCutoffDate.setDate(pastCutoffDate.getDate() - 7);
@@ -146,7 +148,6 @@ module.exports = {
       return;
     }
     // #endregion
-
 
     const materialLog = new Map();
     const supplyLog = new Map();
@@ -296,6 +297,6 @@ module.exports = {
     `Command: ${interaction.options.getSubcommand()}\n` +
     `Lower Bound: ${lowerBound.toDateString()}\n` +
     `Upper Bound: ${upperBound.toDateString()}\n` +
-    `Command fpr ${interaction.user.username} completed at: ${new Date().toTimeString()}\n`);
+    `${interaction.user.username} call completed at: ${new Date().toTimeString()}\n`);
   },
 };
