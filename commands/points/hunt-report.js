@@ -98,7 +98,6 @@ module.exports = {
     currentCutoffDate.setMinutes(0);
     currentCutoffDate.setSeconds(0);
 
-    // TODO: Use getDay() befofre June you boonhickie.
     switch (today.getDay()) {
       case 0: // Sunday
         currentCutoffDate.setDate(today.getDate() - 2);
