@@ -45,7 +45,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
   catch (error) {
     console.error(error);
     if (interaction.replied || interaction.deferred) {
-      await interaction.followUp({content: 'Oh dear, something tripped me up and I cannot build a report. Please contact Mr. <@148331191555063808> if you feel this is a mistake.', ephemeral: true});
+      await interaction.followUp({content: 'Something tripped me up and I cannot build a report. Please contact Mr. <@148331191555063808> if you feel this is a mistake.', ephemeral: true});
     }
     else {
       await interaction.reply({content: 'There was an error while executing this command!', ephemeral: true});

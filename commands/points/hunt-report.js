@@ -1,3 +1,6 @@
+// TODO: Fails when there are messages without embeds in there.
+// Need a null check/throw away bad messages
+
 /* eslint-disable max-len */
 const {SlashCommandBuilder} = require('discord.js');
 
@@ -7,12 +10,12 @@ const {SlashCommandBuilder} = require('discord.js');
 const CAMPS = [
   {
     name: 'Alpha',
-    guildId: '1045200295476592711', // Prod
-    webhookChannelId: '1055297577643425792'},
+    guildId: '1125928248312864770', // Prod
+    webhookChannelId: '1127683614440697877'},
   {
     name: 'Bravo',
-    guildId: '1045200295476592711', // Prod
-    webhookChannelId: '1077410558686531664'},
+    guildId: '1125928248312864770', // Prod
+    webhookChannelId: '1127683650192936990'},
   {
     name: 'Charlie',
     guildId: '1098844083629342805', // Dev
@@ -23,8 +26,13 @@ const CAMPS = [
     webhookChannelId: '0'},
   {
     name: 'Echo',
-    guildId: '1098844083629342805', // Dev
-    webhookChannelId: '1099852489609723904'},
+    guildId: '1125928248312864770', // Dev
+    webhookChannelId: '1127683744547999805'},
+  {
+    name: 'Foxtrot',
+    guildId: '1045200295476592711', // Prod
+    webhookChannelId: '1107836354001379438',
+  },
 ];
 
 const IS_EPHEMERAL = true;
@@ -52,6 +60,7 @@ module.exports = {
                       {name: CAMPS[2].name, value: '2'},
                       {name: CAMPS[3].name, value: '3'},
                       {name: CAMPS[4].name, value: '4'},
+                      {name: CAMPS[5].name, value: '5'},
                   )))
       .addSubcommand((subcommand) =>
         subcommand
@@ -67,6 +76,7 @@ module.exports = {
                       {name: CAMPS[2].name, value: '2'},
                       {name: CAMPS[3].name, value: '3'},
                       {name: CAMPS[4].name, value: '4'},
+                      {name: CAMPS[5].name, value: '5'},
                   ))),
   async execute(interaction) {
     // Reply to the command so avoid timeout and notify user the bot is working on the command
@@ -122,6 +132,7 @@ module.exports = {
         break;
       default:
         console.log('Somehow today is not Monday - Sunday in date check logic...');
+        return;
     }
 
     // console.log(currentCutoffDate.setDate((today.getDay()+ 2) % 7));
@@ -185,18 +196,30 @@ module.exports = {
         supplyBatch = batch.filter((message) =>
           message.embeds[0].description.includes(SUPPLY_KEY));
 
+        let discordIdIndex;
+        const materialQtyIndex = 0;
         while (!foundEnd) {
           // Process donation messages
+          // TODO: Lots of repeated code below... lazy ass.
+
           if (withinDatesBatch.size > 0) {
             donationBatch.each((message) => {
               const entry = message.embeds[0].description
                   .match(/[+-]?\d+(\.\d+)?/g);
 
-              if (materialLog.has(entry[1])) {
-                materialLog.set(entry[1], materialLog.get(entry[1]) + parseFloat(entry[0]));
+              // Webhook changed and need to account for old message and new message regex.
+              if (entry.length < 3) {
+                discordIdIndex = 1;
               }
               else {
-                materialLog.set(entry[1], parseFloat(entry[0]));
+                discordIdIndex = 2;
+              }
+
+              if (materialLog.has(entry[discordIdIndex])) {
+                materialLog.set(entry[discordIdIndex], materialLog.get(entry[discordIdIndex]) + parseFloat(entry[materialQtyIndex]));
+              }
+              else {
+                materialLog.set(entry[discordIdIndex], parseFloat(entry[materialQtyIndex]));
               }
             });
             // Process supply messages
@@ -204,11 +227,19 @@ module.exports = {
               const entry = message.embeds[0].description
                   .match(/[+-]?\d+(\.\d+)?/g);
 
-              if (supplyLog.has(entry[1])) {
-                supplyLog.set(entry[1], supplyLog.get(entry[1]) + parseFloat(entry[0]));
+              // Webhook changed and need to account for old message and new message regex.
+              if (entry.length < 3) {
+                discordIdIndex = 1;
               }
               else {
-                supplyLog.set(entry[1], parseFloat(entry[0]));
+                discordIdIndex = 2;
+              }
+
+              if (supplyLog.has(entry[discordIdIndex])) {
+                supplyLog.set(entry[discordIdIndex], supplyLog.get(entry[discordIdIndex]) + parseFloat(entry[materialQtyIndex]));
+              }
+              else {
+                supplyLog.set(entry[discordIdIndex], parseFloat(entry[materialQtyIndex]));
               }
             });
 
