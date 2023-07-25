@@ -21,18 +21,9 @@ const CAMPS = [
     guildId: '1098844083629342805', // Dev
     webhookChannelId: '1098844482155327588'},
   {
-    name: 'Delta',
-    guildId: '1045200295476592711', // Prod
-    webhookChannelId: '0'},
-  {
     name: 'Echo',
     guildId: '1125928248312864770', // Dev
     webhookChannelId: '1127683744547999805'},
-  {
-    name: 'Foxtrot',
-    guildId: '1045200295476592711', // Prod
-    webhookChannelId: '1107836354001379438',
-  },
 ];
 
 const IS_EPHEMERAL = true;
@@ -59,8 +50,6 @@ module.exports = {
                       {name: CAMPS[1].name, value: '1'},
                       {name: CAMPS[2].name, value: '2'},
                       {name: CAMPS[3].name, value: '3'},
-                      {name: CAMPS[4].name, value: '4'},
-                      {name: CAMPS[5].name, value: '5'},
                   )))
       .addSubcommand((subcommand) =>
         subcommand
@@ -75,8 +64,6 @@ module.exports = {
                       {name: CAMPS[1].name, value: '1'},
                       {name: CAMPS[2].name, value: '2'},
                       {name: CAMPS[3].name, value: '3'},
-                      {name: CAMPS[4].name, value: '4'},
-                      {name: CAMPS[5].name, value: '5'},
                   ))),
   async execute(interaction) {
     // Reply to the command so avoid timeout and notify user the bot is working on the command

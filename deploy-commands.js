@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 const {REST, Routes} = require('discord.js');
-const {clientId, guildId, token} = require('./config.json');
+const {clientId, token} = require('./config.json'); // Removed guildId recently... if something breaks check there
 const fs = require('node:fs');
 const path = require('node:path');
 
